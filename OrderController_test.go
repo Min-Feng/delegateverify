@@ -30,11 +30,11 @@ import (
 // FAIL
 // Error: Tests failed.
 func TestOrderController_DeleteAmountMoreThan100(t *testing.T) {
-	type step struct {
-		msg string
-		m   *TestOrderModel
+	type setup struct {
+		msg   string
+		model *TestOrderModel
 	}
-	tests := []step{
+	setups := []setup{
 		{
 			"Amount < 臨界值(100), 不應該被刪除",
 			&TestOrderModel{order: Order{ID: 1, Amount: 99}, expect: false},
@@ -48,10 +48,10 @@ func TestOrderController_DeleteAmountMoreThan100(t *testing.T) {
 			&TestOrderModel{order: Order{ID: 1, Amount: 101}, expect: true},
 		},
 	}
-	for _, tt := range tests {
-		c := NewOrderController(tt.m)
-		c.DeleteAmountMoreThan100()
-		assert.Equal(t, tt.m.expect, tt.m.actual, tt.msg)
+	for _, s := range setups {
+		controller := NewOrderController(s.model)
+		controller.DeleteAmountMoreThan100()
+		assert.Equal(t, s.model.expect, s.model.actual, s.msg)
 	}
 }
 
